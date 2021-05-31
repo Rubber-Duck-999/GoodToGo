@@ -71,14 +71,15 @@ class Api:
         if len(self.data_list) > 0:
             message = ''
             msg_list = []
+            found = False
             for data in self.data_list:
                 if data["available"] > 0:
                     text = '{} has {} packages available until {}\n\n'
-                else:
-                    text = '{} has {} packages available {}\n\n'
-                msg_list.append(text.format(data["store"], data["available"], data["end_time"]))
-            message = message.join(msg_list)
-            self.email(message)
+                    found = True
+                    msg_list.append(text.format(data["store"], data["available"], data["end_time"]))
+            if found:
+                message = message.join(msg_list)
+                self.email(message)
 
     def check_item(self, item):
         '''Check each item for fields'''
