@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 '''Python script to check too good to go api'''
 import smtplib
 import json
@@ -7,6 +8,7 @@ import os
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from tgtg import TgtgClient
+from stores import Stores
 
 
 class Api:
@@ -14,13 +16,13 @@ class Api:
 
     def __init__(self):
         '''Constructor for class'''
-        self.config_file   = "/home/pi/Documents/GoodToGo/config.json"
+        self.config_file   = "/home/pi/Documents/HouseGuardServices/config.json"
         self.account       = ''
         self.password      = ''
         self.from_email    = ''
         self.to_email      = ''
         self.from_password = ''
-        self.data_list     = []
+        self.stores        = Stores()
 
     def get_config(self):
         '''Get configuration values'''
@@ -30,8 +32,8 @@ class Api:
                 return False
             config_file        = open(self.config_file, "r")
             config_data        = json.load(config_file)
-            self.account       = config_data["email"]
-            self.password      = config_data["password"]
+            self.account       = config_data["account_email"]
+            self.password      = config_data["account_password"]
             self.from_email    = config_data["from_email"]
             self.from_password = config_data["from_password"]
             self.to_email      = config_data["to_email"]
@@ -68,35 +70,31 @@ class Api:
     def notify_user(self):
         '''Count of items available'''
         print('# notify_user()')
-        if len(self.data_list) > 0:
-            message = ''
-            msg_list = []
-            found = False
-            for data in self.data_list:
-                if data["available"] > 0:
-                    text = '{} has {} packages available until {}\n\n'
-                    found = True
-                    msg_list.append(text.format(data["store"], data["available"], data["end_time"]))
-            if found:
-                message = message.join(msg_list)
-                self.email(message)
+        message = ''
+        msg_list = []
+        if not self.stores.stores_updated:
+            return
+        found = False
+        for store in self.stores.stores:
+            if store["count"] > 0:
+                text = '{} has {} packages available\n\n'
+                found = True
+                msg_list.append(text.format(store["store_name"], store["count"]))
+        if len(msg_list) > 0:
+            message = message.join(msg_list)
+            self.email(message)
 
     def check_item(self, item):
         '''Check each item for fields'''
         print('# check_item()')
         try:
             store_name = item["store"]["store_name"]
+            store_found = self.stores.find(store_name)
             count = item["items_available"]
-            if count > 0:
-                available_till = item["purchase_end"]
+            if store_found:
+                self.stores.update_count(store_name, count)
             else:
-                available_till = ""
-            data = {
-                "store": store_name,
-                "available": count,
-                "end_time": available_till
-            }
-            self.data_list.append(data)
+                self.stores.add_store(store_name, count)
             time.sleep(1)
         except KeyError as error:
             print('Key Error: {}'.format(error))
@@ -122,5 +120,13 @@ class Api:
         except TypeError:
             print('Type Error')
 
-api = Api()
-api.get_items()
+    def time_loop(self):
+        '''Loop checking in time periods'''
+        while True:
+            api.get_items()
+            print('Waiting')
+            time.sleep(5)
+
+if __name__ == "__main__":
+    api = Api()
+    api.time_loop()
