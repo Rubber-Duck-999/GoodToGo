@@ -55,7 +55,7 @@ class Api:
             server.starttls()
             server.ehlo()
             message = MIMEMultipart()
-            message['Subject'] = 'Two Good To Go Daily Update'
+            message['Subject'] = 'Too Good To Go Update'
             message['From'] = self.from_email
             message['To'] = ", ".join(self.to_email)
             message.attach(MIMEText(text, 'plain'))
