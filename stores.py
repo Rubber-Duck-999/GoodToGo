@@ -20,18 +20,18 @@ class Stores:
     def find(self, store_name):
         '''Checks if a store exists'''
         found = False
-        for store in self.stores:
-            name = store['store_name']
+        index = 0
+        for i in range(len(self.stores)):
+            name = self.stores[i]['store_name']
             if name == store_name:
                 found = True
-        return found
+                index = i
+        return found, index
 
-    def update_count(self, store_name, store_count):
+    def update_count(self, store_index, store_count):
         '''Update the count for store'''
-        for store in self.stores:
-            name = store['store_name']
-            if name == store_name:
-                if store['count'] != store_count:
-                    store['count'] = store_count
-                    store['updated'] = True
-                    self.stores_updated = True
+        count = self.stores[store_index][store_count]
+        if store_count > 0 and count != store_count:
+            self.stores[store_index]['count'] = store_count
+            self.stores[store_index]['updated'] = True
+            self.stores_updated = True

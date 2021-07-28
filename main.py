@@ -16,7 +16,7 @@ class Api:
 
     def __init__(self):
         '''Constructor for class'''
-        self.config_file   = "/home/pi/Documents/HouseGuardServices/config.json"
+        self.config_file   = "/home/simon/Documents/HouseGuardServices/config.json"
         self.account       = ''
         self.password      = ''
         self.from_email    = ''
@@ -89,10 +89,10 @@ class Api:
         print('# check_item()')
         try:
             store_name = item["store"]["store_name"]
-            store_found = self.stores.find(store_name)
+            store_found, store_index = self.stores.find(store_name)
             count = item["items_available"]
             if store_found:
-                self.stores.update_count(store_name, count)
+                self.stores.update_count(store_index, count)
             else:
                 self.stores.add_store(store_name, count)
             time.sleep(1)
@@ -125,7 +125,7 @@ class Api:
         while True:
             api.get_items()
             print('Waiting')
-            time.sleep(5)
+            time.sleep(5 * 60)
 
 if __name__ == "__main__":
     api = Api()
