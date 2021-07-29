@@ -30,13 +30,13 @@ class Api:
         try:
             if not os.path.isfile(self.config_file):
                 return False
-            config_file        = open(self.config_file, "r")
-            config_data        = json.load(config_file)
-            self.account       = config_data["account_email"]
-            self.password      = config_data["account_password"]
-            self.from_email    = config_data["from_email"]
-            self.from_password = config_data["from_password"]
-            self.to_email      = config_data["to_email"]
+            with open(self.config_file, "r") as config_file:
+                config_data        = json.load(config_file)
+                self.account       = config_data["account_email"]
+                self.password      = config_data["account_password"]
+                self.from_email    = config_data["from_email"]
+                self.from_password = config_data["from_password"]
+                self.to_email      = config_data["to_email"]
             return True
         except IOError as error:
             print('File not available: {}'.format(error))
@@ -100,10 +100,8 @@ class Api:
             time.sleep(1)
         except KeyError as error:
             print('Key Error: {}'.format(error))
-            print('Item: {}'.format(item))
         except ValueError as error:
             print('Value Error: {}'.format(error))
-            print('Item: {}'.format(item))
 
     def get_items(self):
         '''Get 2G2G favourites'''

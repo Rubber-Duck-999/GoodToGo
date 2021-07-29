@@ -33,9 +33,9 @@ class Stores:
 
     def update_count(self, store_index, store_count):
         '''Update the count for store'''
-        count = self.stores[store_index][store_count]
+        count = self.stores[store_index]['count']
+        self.stores[store_index]['count'] = store_count
         if store_count > 0 and count != store_count:
-            self.stores[store_index]['count'] = store_count
             self.stores[store_index]['updated'] = True
             self.stores_updated = True
         else:
