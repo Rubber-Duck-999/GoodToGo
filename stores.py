@@ -12,7 +12,7 @@ class Stores:
         store = {
             'store_name': store_name,
             'count': count,
-            'updated': True
+            'updated': False
         }
         self.stores.append(store)
         self.stores_updated = True
