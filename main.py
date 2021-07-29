@@ -76,7 +76,7 @@ class Api:
             return
         found = False
         for store in self.stores.stores:
-            if store["count"] > 0:
+            if store["updated"]:
                 text = '{} has {} packages available\n\n'
                 found = True
                 msg_list.append(text.format(store["store_name"], store["count"]))
