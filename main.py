@@ -80,9 +80,11 @@ class Api:
                 text = '{} has {} packages available\n\n'
                 found = True
                 msg_list.append(text.format(store["store_name"], store["count"]))
+                store["updated"] = False
         if len(msg_list) > 0:
             message = message.join(msg_list)
             self.email(message)
+            self.stores_updated = False
 
     def check_item(self, item):
         '''Check each item for fields'''
