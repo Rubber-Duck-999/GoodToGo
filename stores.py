@@ -35,3 +35,5 @@ class Stores:
             self.stores[store_index]['count'] = store_count
             self.stores[store_index]['updated'] = True
             self.stores_updated = True
+        else:
+            self.stores[store_index]['updated'] = False
