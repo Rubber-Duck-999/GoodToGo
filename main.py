@@ -125,7 +125,7 @@ class Api:
         while True:
             api.get_items()
             print('Waiting')
-            time.sleep(5 * 60)
+            time.sleep(60)
 
 if __name__ == "__main__":
     api = Api()
