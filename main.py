@@ -16,7 +16,7 @@ class Api:
 
     def __init__(self):
         '''Constructor for class'''
-        self.config_file   = "/home/simon/Documents/HouseGuardServices/config.json"
+        self.config_file   = "/home/pi/Documents/HouseGuardServices/config.json"
         self.account       = ''
         self.password      = ''
         self.from_email    = ''
