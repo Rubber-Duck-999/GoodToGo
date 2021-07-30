@@ -93,6 +93,7 @@ class Api:
             store_name = item["store"]["store_name"]
             count = item["items_available"]
             if count > 0:
+                print('Found item for: {}, {}'.format(store_name, count))
                 store_found, store_index = self.stores.find(store_name)
                 if store_found:
                     self.stores.update_count(store_index, count)
