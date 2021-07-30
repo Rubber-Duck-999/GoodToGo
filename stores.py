@@ -10,8 +10,6 @@ class Stores:
     def add_store(self, store_name, count):
         '''Adds a store to the list'''
         updated = False
-        if count > 0:
-            updated = True
         store = {
             'store_name': store_name,
             'count': count,
