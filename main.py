@@ -3,6 +3,7 @@
 import smtplib
 import json
 import time
+import logging
 import os
 # Import the email modules we'll need
 from email.mime.text import MIMEText
@@ -10,6 +11,19 @@ from email.mime.multipart import MIMEMultipart
 from tgtg import TgtgClient
 from stores import Stores
 
+
+filename = '/home/pi/Documents/GoodToGo/run.log'
+try:
+    os.remove(filename)
+except OSError as error:
+    pass
+
+# Add the log message handler to the logger
+logging.basicConfig(filename=filename,
+                    format='%(asctime)s - %(levelname)s - %(message)s', 
+                    level=logging.INFO)
+
+logging.info("Starting program")
 
 class Api:
     '''Api for good to go manager'''
@@ -26,7 +40,7 @@ class Api:
 
     def get_config(self):
         '''Get configuration values'''
-        print('# get_config()')
+        logging.info('# get_config()')
         try:
             if not os.path.isfile(self.config_file):
                 return False
@@ -39,16 +53,16 @@ class Api:
                 self.to_email      = config_data["to_email"]
             return True
         except IOError as error:
-            print('File not available: {}'.format(error))
+            logging.error('File not available: {}'.format(error))
         except KeyError as error:
-            print('Key not available: {}'.format(error))
+            logging.error('Key not available: {}'.format(error))
         except TypeError as error:
-            print('Type not available: {}'.format(error))
+            logging.error('Type not available: {}'.format(error))
         return False
 
     def email(self, text):
         '''Set up message for email from stores'''
-        print('# email()')
+        logging.info('# email()')
         try:
             server = smtplib.SMTP('smtp.gmail.com', 587)
             server.ehlo()
@@ -63,13 +77,13 @@ class Api:
             server.sendmail(self.from_email, self.to_email, message.as_string())
             server.close()
         except smtplib.SMTPAuthenticationError as error:
-            print('Error occured on auth: {}'.format(error))
+            logging.error('Error occured on auth: {}'.format(error))
         except smtplib.SMTPException as error:
-            print('Error occured on SMTP: {}'.format(error))
+            logging.error('Error occured on SMTP: {}'.format(error))
 
     def notify_user(self):
         '''Count of items available'''
-        print('# notify_user()')
+        logging.info('# notify_user()')
         message = ''
         msg_list = []
         if not self.stores.stores_updated:
@@ -88,7 +102,7 @@ class Api:
 
     def check_item(self, item):
         '''Check each item for fields'''
-        print('# check_item()')
+        logging.info('# check_item()')
         try:
             store_name = item["store"]["store_name"]
             count = item["items_available"]
@@ -101,13 +115,13 @@ class Api:
                     self.stores.add_store(store_name, count)
                 time.sleep(1)
         except KeyError as error:
-            print('Key Error: {}'.format(error))
+            logging.error('Key Error: {}'.format(error))
         except ValueError as error:
-            print('Value Error: {}'.format(error))
+            logging.error('Value Error: {}'.format(error))
 
     def get_items(self):
         '''Get 2G2G favourites'''
-        print('# get_items()')
+        logging.info('# get_items()')
         try:
             client = TgtgClient(email=self.account,
                                 password=self.password)
@@ -116,9 +130,9 @@ class Api:
                 self.check_item(item)
             self.notify_user()
         except KeyError:
-            print('Key Error')
+            logging.error('Key Error')
         except TypeError:
-            print('Type Error')
+            logging.error('Type Error')
 
     def time_loop(self):
         '''Loop checking in time periods'''
@@ -126,7 +140,7 @@ class Api:
             return
         while True:
             api.get_items()
-            print('Waiting')
+            logging.info('Waiting')
             time.sleep(60)
 
 if __name__ == "__main__":
