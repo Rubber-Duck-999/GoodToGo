@@ -115,7 +115,7 @@ class TestStores(unittest.TestCase):
             'store': {
                 'store_name': 'Greggs'
             },
-            'items_available': 0
+            'items_available': 1
         }
         test_api = main.Api()
         test_api.check_item(item)
@@ -144,7 +144,7 @@ class TestStores(unittest.TestCase):
         }
         test_api = main.Api()
         test_api.check_item(item)
-        self.assertTrue(test_api.stores.stores_updated)
+        self.assertFalse(test_api.stores.stores_updated)
         test_api.stores.stores_updated = False
         # Update item and re check
         item = {
@@ -166,7 +166,7 @@ class TestStores(unittest.TestCase):
         }
         test_api = main.Api()
         test_api.check_item(item)
-        self.assertTrue(test_api.stores.stores_updated)
+        self.assertFalse(test_api.stores.stores_updated)
         test_api.stores.stores_updated = False
         # Update item and re check
         item['items_available'] = 0
