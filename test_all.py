@@ -105,7 +105,7 @@ class TestStores(unittest.TestCase):
     def test_main_get_config(self):
         '''test for Api checking configuration file'''
         test_api = main.Api()
-        test_api.config_file = "/home/simon/Documents/HouseGuardServices/config.json"
+        test_api.config_file = "/home/pi/Documents/HouseGuardServices/config.json"
         valid = test_api.get_config()
         self.assertTrue(valid)
 
