@@ -9,7 +9,7 @@ import os
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from tgtg import TgtgClient
-from tgtg.exceptions import TgTgAPIError, TgTgLoginError
+from tgtg.exceptions import TgtgAPIError, TgtgLoginError
 from stores import Stores
 
 
