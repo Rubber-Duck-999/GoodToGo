@@ -141,7 +141,7 @@ class Api:
         while True:
             api.get_items()
             logging.info('Waiting')
-            time.sleep(60)
+            time.sleep(3 * 60)
 
 if __name__ == "__main__":
     api = Api()
