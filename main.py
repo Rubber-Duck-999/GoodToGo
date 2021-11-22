@@ -134,10 +134,6 @@ class Api:
             logging.error('Key Error')
         except TypeError:
             logging.error('Type Error')
-        except TgTgLoginError:
-            logging.error('Login Error')
-        except TgTgAPIError:
-            logging.error('API Error')
 
     def time_loop(self):
         '''Loop checking in time periods'''
