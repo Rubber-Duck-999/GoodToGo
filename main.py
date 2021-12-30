@@ -33,7 +33,6 @@ class Api:
         '''Constructor for class'''
         self.config_file   = "/home/pi/Documents/HouseGuardServices/config.json"
         self.account       = ''
-        self.password      = ''
         self.from_email    = ''
         self.to_email      = ''
         self.from_password = ''
@@ -48,7 +47,6 @@ class Api:
             with open(self.config_file, "r") as config_file:
                 config_data        = json.load(config_file)
                 self.account       = config_data["account_email"]
-                self.password      = config_data["account_password"]
                 self.from_email    = config_data["from_email"]
                 self.from_password = config_data["from_password"]
                 self.to_email      = config_data["to_email"]
@@ -124,8 +122,8 @@ class Api:
         '''Get 2G2G favourites'''
         logging.info('# get_items()')
         try:
-            client = TgtgClient(email=self.account,
-                                password=self.password)
+            client = TgtgClient(email=self.account)
+            client.get_credentials()
             items = client.get_items()
             for item in items:
                 self.check_item(item)
